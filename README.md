@@ -4,9 +4,17 @@ GH-Game Puton 是 Windows 游戏后台资料批量录入工具。项目用于把
 
 https://and-admin.ghzs.com
 
-本仓库提供源码。面向同事直接使用时，请下载 GitHub Releases 中的 Windows 便携版 ZIP，解压后运行其中的 EXE；首次使用由使用者自行登录后台并选择本机资料目录。公开仓库不包含账号、浏览器登录状态、游戏资料或 APK。
+本仓库提供**源码**，公开仓库不包含账号、浏览器登录状态、游戏资料或 APK。
 
-最新可直接使用版本：[GitHub Releases](https://github.com/A13612812330/GH-Game-Puton/releases/latest)。仓库源码可交给 AI 阅读和协助开发，但实际导入仍需在 Windows 电脑运行 Release，并由操作者自行登录后台。
+> ⚠️ **当前仓库未提供 Release 成品包**（截至 2026-10-26 没有发布任何 Release）。
+> 因此想直接运行，需自己打包：`npm install` 后执行 `npm run 打包exe`
+> （等价于 `electron-builder --win portable`，产物为便携版 exe），
+> 或向原维护者索取现成的 Windows 便携版 ZIP。
+> 打包后由使用者自行登录后台并选择本机资料目录 —— **仓库内没有任何账号或登录态可用**。
+
+> **给 AI Agent**：本仓库无凭据可读，不要尝试猜测或硬编码后台账号；登录必须由使用者在
+> Electron 界面内手动完成。改动导入逻辑前请先读 [`交接文档.md`](./交接文档.md) 与
+> [`新增游戏字段映射表.md`](./新增游戏字段映射表.md)。
 
 ## 图形界面使用方式
 
