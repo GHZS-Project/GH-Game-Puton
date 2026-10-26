@@ -1,0 +1,297 @@
+﻿<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>游戏导入台</title>
+    <link rel="stylesheet" href="/style.css" />
+  </head>
+  <body>
+    <div class="shell">
+      <aside class="sidebar">
+        <div class="brand-card">
+          <div class="brand-mark">GH</div>
+          <div>
+            <p class="eyebrow">运营工具台</p>
+            <h1>游戏导入台</h1>
+          </div>
+        </div>
+
+        <section class="side-card status-card">
+          <div class="side-head">
+            <span>状态概览</span>
+            <small>当前任务摘要</small>
+          </div>
+          <div class="status-list">
+            <div class="status-item">
+              <span>登录状态</span>
+              <strong id="loginStatusText">未检测</strong>
+            </div>
+            <div class="status-item">
+              <span>当前模式</span>
+              <strong id="currentModeText">待命</strong>
+            </div>
+            <div class="status-item">
+              <span>当前进度</span>
+              <strong id="progressText">0 / 0</strong>
+            </div>
+          </div>
+          <div class="progress-card">
+            <div class="progress-head">
+              <span id="currentGameText">暂无任务</span>
+              <strong id="progressPercent">0%</strong>
+            </div>
+            <div class="progress-track"><div id="progressBar" class="progress-bar"></div></div>
+          </div>
+        </section>
+
+        <section class="side-card">
+          <div class="side-head">
+            <span>工作流</span>
+            <small>按步骤执行</small>
+          </div>
+          <ol class="workflow-list">
+            <li><span>1</span><div><strong>选择资料目录</strong><em>自动缓存上次位置</em></div></li>
+            <li><span>2</span><div><strong>打开后台窗口</strong><em>直接接管当前窗口</em></div></li>
+            <li><span>3</span><div><strong>检查并补齐资料</strong><em>支持前端直接修改</em></div></li>
+            <li><span>4</span><div><strong>选择导入策略</strong><em>默认执行权限获取</em></div></li>
+          </ol>
+        </section>
+
+        <section class="side-card calendar-card">
+          <div class="side-head">
+            <span>登记日历</span>
+            <small>按登记表统计</small>
+          </div>
+          <div class="calendar-nav">
+            <button id="prevCalendarMonth" class="calendar-nav-btn" type="button" aria-label="上个月">‹</button>
+            <strong id="calendarMonthText">本月</strong>
+            <button id="nextCalendarMonth" class="calendar-nav-btn" type="button" aria-label="下个月">›</button>
+          </div>
+          <div id="calendarGrid" class="calendar-grid"></div>
+        </section>
+
+        <section class="side-card docs-card">
+          <div class="side-head">
+            <span>操作说明</span>
+            <small>快速入口</small>
+          </div>
+          <div class="doc-actions">
+            <button id="openReadme" class="btn btn-ghost">打开操作文档</button>
+            <button id="refreshAll" class="btn btn-ghost">刷新全部状态</button>
+          </div>
+        </section>
+      </aside>
+
+      <main class="workspace">
+        <nav class="module-tabs" aria-label="页面模块">
+          <button class="module-tab active" type="button" data-page="import">导入工作台</button>
+          <button class="module-tab" type="button" data-page="imported">已导入游戏</button>
+          <button class="module-tab" type="button" data-page="registration">登记表</button>
+        </nav>
+
+        <div class="page-view active" data-page-view="import">
+        <section class="panel">
+          <div class="panel-header">
+            <div>
+              <p class="section-kicker">步骤 1</p>
+              <h2>选择资料目录</h2>
+            </div>
+            <div id="runBadge" class="run-badge idle">空闲</div>
+          </div>
+          <div class="folder-row">
+            <input id="folderInput" type="text" placeholder="例如：E:\新建文件夹\游戏资料" />
+            <button id="chooseFolder" class="btn btn-primary">选择文件夹</button>
+            <button id="scanFolder" class="btn">扫描资料</button>
+          </div>
+          <p class="field-tip">支持单个游戏目录，也支持批量目录。扫描后会自动生成游戏卡片、缺项提示和导入准备状态。</p>
+        </section>
+
+        <section class="panel">
+          <div class="panel-header compact">
+            <div>
+              <p class="section-kicker">步骤 2</p>
+              <h2>后台登录状态</h2>
+            </div>
+            <div class="panel-actions">
+              <button id="openLogin" class="btn btn-secondary">打开后台窗口</button>
+              <button id="checkLogin" class="btn">检查登录状态</button>
+            </div>
+          </div>
+          <div id="browserInfo" class="browser-info">第一次使用：先点击“打开后台窗口”，在弹出的后台页面登录；登录后点击“检查登录状态”。正式执行会接管这个后台窗口自动操作。</div>
+          <div id="browserList" class="browser-list"></div>
+        </section>
+
+        <section class="panel">
+          <div class="panel-header compact">
+            <div>
+              <p class="section-kicker">步骤 3</p>
+              <h2>选择要导入的游戏</h2>
+            </div>
+            <div class="panel-actions">
+              <span id="gamesSummary" class="summary-text">尚未扫描资料</span>
+              <button id="refreshGames" class="btn btn-ghost" type="button">刷新导入游戏</button>
+            </div>
+          </div>
+
+          <div class="games-toolbar">
+            <button id="selectReadyGames" class="btn btn-ghost">选中可执行</button>
+            <button id="selectAllGames" class="btn btn-ghost">全选</button>
+          </div>
+          <div id="gamesGrid" class="games-grid"></div>
+        </section>
+
+        <section class="panel">
+          <div class="panel-header compact">
+            <div>
+              <p class="section-kicker">步骤 4</p>
+              <div class="panel-title-row">
+                <h2>导入策略</h2>
+                <span class="info-popover-wrap">
+                  <button class="info-trigger" type="button" aria-label="查看导入策略说明">!</button>
+                  <span class="info-popover">批量导入会按顺序一个个执行，当前游戏完成后再处理下一个，减少后台弹窗和上传流程互相影响。</span>
+                </span>
+              </div>
+            </div>
+          </div>
+
+          <div class="strategy-grid">
+            <div class="mode-list">
+              <input type="radio" name="mode" value="submit" checked hidden />
+              <label class="mode-item">
+                <span><strong>正式执行</strong><em>提交上架，适合最终执行</em></span>
+              </label>
+            </div>
+
+            <div class="strategy-side">
+              <input id="fetchApk" type="checkbox" checked hidden />
+              <label class="switch-item">
+                <input id="autoShow" type="checkbox" />
+                <span>提交后自动点击“自己显示”</span>
+              </label>
+              <div class="action-bar">
+                <button id="start" class="btn btn-primary btn-large">开始执行</button>
+                <button id="continueTask" class="btn btn-secondary btn-large">继续执行</button>
+                <button id="stop" class="btn btn-danger btn-large">停止任务</button>
+                <button id="openFolder" class="btn btn-ghost">打开资料目录</button>
+              </div>
+            </div>
+          </div>
+        </section>
+        </div>
+
+        <div class="page-view" data-page-view="imported">
+        <section class="panel">
+          <div class="panel-header compact">
+            <div>
+              <p class="section-kicker">已完成</p>
+              <h2>已导入游戏</h2>
+            </div>
+            <div class="panel-actions">
+              <span id="importedSummary" class="summary-text">暂无已导入游戏</span>
+            </div>
+          </div>
+          <div id="importedGrid" class="games-grid imported-grid"></div>
+        </section>
+        </div>
+
+        <div class="page-view" data-page-view="registration">
+        <section class="panel registration-panel">
+          <div class="panel-header compact">
+            <div>
+              <p class="section-kicker">登记表</p>
+              <h2>完整登记记录</h2>
+            </div>
+            <div class="panel-actions">
+              <span id="tableSummary" class="summary-text">暂无登记数据</span>
+              <button id="refreshTable" class="btn btn-ghost">刷新登记表</button>
+              <button id="deleteRegistrationRows" class="btn btn-danger">删除选中登记</button>
+              <button id="openCsv" class="btn btn-ghost">打开登记表</button>
+              <button id="downloadCsv" class="btn btn-ghost">下载登记表</button>
+            </div>
+          </div>
+          <div class="table-wrap">
+            <table id="registrationTable">
+              <thead></thead>
+              <tbody></tbody>
+            </table>
+          </div>
+        </section>
+        </div>
+
+        <section id="logPanel" class="panel">
+          <div class="panel-header compact">
+            <div>
+              <p class="section-kicker">执行进度</p>
+              <h2>任务日志</h2>
+            </div>
+            <div class="panel-actions">
+              <div class="meta-chip"><span>开始时间</span><strong id="startedAtText">未开始</strong></div>
+              <div class="meta-chip"><span>任务结果</span><strong id="lastResultText">暂无</strong></div>
+              <button id="refreshLog" class="btn btn-ghost">刷新日志</button>
+              <button id="toggleLog" class="btn btn-ghost">折叠日志</button>
+            </div>
+          </div>
+          <div id="stepProgress" class="step-progress"></div>
+          <pre id="logBox" class="log-box"></pre>
+        </section>
+      </main>
+    </div>
+
+    <div id="missingModal" class="modal-backdrop" hidden>
+      <section class="modal">
+        <div class="modal-head">
+          <div>
+            <p class="section-kicker">资料补充</p>
+            <h2 id="missingTitle">需要补充资料</h2>
+          </div>
+          <button id="closeMissingModal" class="icon-btn" type="button" aria-label="关闭">×</button>
+        </div>
+        <div id="missingIssueBox" class="issue-box"></div>
+        <form id="missingForm" class="game-form"></form>
+        <div class="modal-actions">
+          <button id="saveMissingAndContinue" class="btn btn-primary" type="button">保存并继续执行</button>
+          <button id="saveMissingOnly" class="btn btn-ghost" type="button">只保存</button>
+        </div>
+      </section>
+    </div>
+
+    <div id="resultModal" class="modal-backdrop" hidden>
+      <section class="modal result-modal">
+        <div class="modal-head">
+          <div>
+            <p class="section-kicker">任务结果</p>
+            <h2 id="resultTitle">任务已完成</h2>
+          </div>
+          <button id="closeResultModal" class="icon-btn" type="button" aria-label="关闭">×</button>
+        </div>
+        <div id="resultSummaryBox" class="issue-box"></div>
+        <div class="modal-actions">
+          <button id="viewRegistrationFromResult" class="btn btn-primary" type="button">查看登记表</button>
+          <button id="closeResultConfirm" class="btn btn-ghost" type="button">关闭</button>
+        </div>
+      </section>
+    </div>
+
+    <div id="toast" class="toast" hidden></div>
+
+    <div id="noticeModal" class="modal-backdrop" hidden>
+      <section class="modal notice-modal">
+        <div class="modal-head">
+          <div>
+            <p class="section-kicker">操作提示</p>
+            <h2 id="noticeTitle">需要处理</h2>
+          </div>
+          <button id="closeNoticeModal" class="icon-btn" type="button" aria-label="关闭">×</button>
+        </div>
+        <div id="noticeMessage" class="notice-message"></div>
+        <div class="modal-actions">
+          <button id="noticeConfirm" class="btn btn-primary" type="button">知道了</button>
+        </div>
+      </section>
+    </div>
+
+    <script src="/app.js"></script>
+  </body>
+</html>
+

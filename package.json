@@ -1,0 +1,50 @@
+{
+  "name": "game-admin-importer",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "main": "main.cjs",
+  "scripts": {
+    "check": "node scripts/批量导入.mjs --dry-run",
+    "import": "node scripts/批量导入.mjs",
+    "manual-check": "node scripts/批量导入.mjs --dry-run --manual-login",
+    "manual-import": "node scripts/批量导入.mjs --manual-login",
+    "web": "node web-server.mjs",
+    "app": "electron .",
+    "打包exe": "electron-builder --win portable"
+  },
+  "dependencies": {
+    "playwright": "^1.57.0"
+  },
+  "devDependencies": {
+    "electron": "^39.2.7",
+    "electron-builder": "^26.0.12"
+  },
+  "build": {
+    "appId": "com.ghzs.game-importer",
+    "productName": "游戏后台批量导入工具",
+    "asar": false,
+    "directories": {
+      "output": "打包输出"
+    },
+    "files": [
+      "main.cjs",
+      "preload.cjs",
+      "web-server.mjs",
+      "package.json",
+      "README.md",
+      "局域网启动服务.cmd",
+      "局域网使用说明.txt",
+      "scripts/**/*",
+      "页面/**/*",
+      "操作手册/**/*",
+      "启动器资源/**/*",
+      "node_modules/**/*"
+    ],
+    "win": {
+      "target": [
+        "portable"
+      ]
+    }
+  }
+}
