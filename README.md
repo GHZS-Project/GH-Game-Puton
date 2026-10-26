@@ -1,5 +1,7 @@
 # GH-Game Puton（游戏后台批量导入工具）
 
+> 📚 **本文档属于 GH 系列交接项目。** 总入口（全部 10 个仓库索引、可用性实测、可复制的 AI Agent prompt）：https://github.com/A13612812330/GH-Handover
+
 GH-Game Puton 是 Windows 游戏后台资料批量录入工具。项目用于把用户本机整理好的新游资料辅助填入已获授权的后台：
 
 https://and-admin.ghzs.com
