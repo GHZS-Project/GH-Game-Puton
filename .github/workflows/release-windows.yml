@@ -1,0 +1,50 @@
+name: Build Windows portable release
+
+on:
+  workflow_dispatch:
+  push:
+    tags:
+      - 'v*'
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: windows-latest
+    steps:
+      - name: Checkout source
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build portable app
+        run: npm run 打包exe -- --x64
+
+      - name: Package portable folder
+        shell: pwsh
+        run: |
+          $source = Join-Path $PWD '打包输出\win-unpacked'
+          if (-not (Test-Path (Join-Path $source '游戏后台批量导入工具.exe'))) {
+            throw 'Portable executable was not created.'
+          }
+          Compress-Archive -Path (Join-Path $source '*') -DestinationPath 'GH-Game-Puton-win-x64.zip' -CompressionLevel Optimal
+
+      - name: Upload portable artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: GH-Game-Puton-win-x64
+          path: GH-Game-Puton-win-x64.zip
+
+      - name: Publish GitHub release
+        if: startsWith(github.ref, 'refs/tags/v')
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh release create '${{ github.ref_name }}' 'GH-Game-Puton-win-x64.zip' --title '${{ github.ref_name }}' --notes 'Windows 便携版。下载后解压整个压缩包并运行 游戏后台批量导入工具.exe。'
