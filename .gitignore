@@ -3,6 +3,7 @@ node_modules/
 dist/
 release/
 github-release-build/
+electron-cache-release/
 浏览器登录状态/
 导入结果/
 旧测试结果-output备份/

@@ -24,6 +24,7 @@
     "appId": "com.ghzs.game-importer",
     "productName": "游戏后台批量导入工具",
     "asar": false,
+    "npmRebuild": false,
     "directories": {
       "output": "打包输出"
     },
